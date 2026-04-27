@@ -231,7 +231,7 @@ Add the correct Traefik labels to the `jitsi-openid` container in `docker-compos
                   - "/jitsi-openid"
 ```
 
-## Variable Reference
+## 5. Variables
 ---
 
 ### Rocket.Chat `.env`
