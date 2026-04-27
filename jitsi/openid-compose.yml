@@ -1,0 +1,23 @@
+services:
+  jitsi-openid:
+    image: ghcr.io/marcelcoding/jitsi-openid:latest
+    restart: unless-stopped
+    environment:
+      - JITSI_SECRET=${JWT_APP_SECRET}
+      - JITSI_URL=${JITSI_URL}
+      - JITSI_SUB=${JWT_APP_ID}
+      - ISSUER_URL=${ISSUER_URL}
+      - BASE_URL=${BASE_URL}
+      - CLIENT_ID=${CLIENT_ID}
+      - CLIENT_SECRET=${CLIENT_SECRET}
+    networks:
+      - meet_jitsi
+      - rocketchat_default
+
+networks:
+  meet_jitsi:
+    external: true
+    name: jitsi_meet.jitsi
+  rocketchat_default:
+    external: true
+    name: rocketchat_default
