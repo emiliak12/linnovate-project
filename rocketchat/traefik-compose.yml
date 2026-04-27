@@ -22,6 +22,10 @@ services:
              loadBalancer:
                servers:
                  - url: "http://jitsi-web-1:80"
+            jitsi-openid:
+              loadBalancer:
+                servers:
+                  - url: "http://jitsi-jitsi-openid-1:3000"
             rocketchat:
               loadBalancer:
                 healthCheck:
@@ -57,12 +61,29 @@ services:
                   Host(`{{ env "GRAFANA_DOMAIN" }}`)
                 {{ end }}
             jitsi:
-              rule: "Host(`video-linnovate.duckdns.org`)"
+              rule: "Host(`video-linnovate.duckdns.org`) && PathPrefix(`/`)"
               entryPoints:
                 - https
               tls:
                 certResolver: le
               service: jitsi
+              priority: 1
+            jitsi-openid:
+              rule: "Host(`video-linnovate.duckdns.org`) && PathPrefix(`/jitsi-openid`)"
+              entryPoints:
+                - https
+              tls:
+                certResolver: le
+              service: jitsi-openid
+              priority: 100
+              middlewares:
+                - strip-jitsi-openid
+
+          middlewares:
+            strip-jitsi-openid:
+              stripPrefix:
+                prefixes:
+                  - "/jitsi-openid"
 
         EOF
 
@@ -96,12 +117,31 @@ services:
               tls:
                 certResolver: le
             jitsi:
-              rule: "Host(`video-linnovate.duckdns.org`)"
+              rule: "Host(`video-linnovate.duckdns.org`) && PathPrefix(`/`)"
+              entryPoints:
+                - https
+              priority: 1
+              tls:
+                certResolver: le
+              service: jitsi
+            jitsi-openid:
+              rule: "Host(`video-linnovate.duckdns.org`) && PathPrefix(`/jitsi-openid`)"
               entryPoints:
                 - https
               tls:
                 certResolver: le
-              service: jitsi
+              service: jitsi-openid
+              priority: 100
+              middlewares:
+                - strip-jitsi-openid
+
+          middlewares:
+            strip-jitsi-openid:
+              stripPrefix:
+                prefixes:
+                  - "/jitsi-openid"
+
+
         EOF
 
         cat /traefik_config/services.tpl >> /traefik_config/http/dynamic.yml
