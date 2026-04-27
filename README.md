@@ -84,7 +84,7 @@ sudo wget unzip
 
 ---
 
-## 5. Challenges & Errors
+## 4. Challenges & Errors
 
 ### Infrastructure — VM Stability
 
