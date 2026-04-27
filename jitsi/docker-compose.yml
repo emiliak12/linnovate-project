@@ -193,7 +193,8 @@ services:
             - WHITEBOARD_COLLAB_SERVER_PUBLIC_URL
             - WHITEBOARD_COLLAB_SERVER_URL_BASE
         networks:
-            meet.jitsi:
+          - rocketchat_default
+          - meet.jitsi
         depends_on:
             - jvb
 
@@ -515,4 +516,6 @@ services:
 
 # Custom network so all services can communicate using a FQDN
 networks:
+    rocketchat_default: 
+      external: true
     meet.jitsi:
